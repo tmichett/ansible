@@ -22,3 +22,8 @@
     yum:
       name: katello-agent
       state: installed
+  - name: Restart server
+    command: /sbin/shutdown -r +1
+    async: 0
+    poll: 0
+    ignore_errors: true
