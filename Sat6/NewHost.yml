@@ -1,0 +1,20 @@
+---
+- hosts: "{{ target_host }}"
+  vars:
+    satellite: sat6.ckb.redhat.com
+    satellite_ak: rhel7
+    satellite_org: CKB_RedHat
+  tasks:
+  - name: Install Satellite package
+    yum:
+      name: http://{{ satellite }}/pub/katello-ca-consumer-latest.noarch.rpm
+      state: present
+  - name:  Register to Satellite
+    redhat_subscription:
+      state: present
+      activationkey: "{{ satellite_ak }}"
+      org_id: "{{ satellite_org }}"
+  - name:  Updates system
+    yum:
+      name: '*'
+      state: latest
