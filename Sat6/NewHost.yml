@@ -18,3 +18,7 @@
     yum:
       name: '*'
       state: latest
+  - name: Install Katello Agent
+    yum:
+      name: katello-agent
+      state: installed
