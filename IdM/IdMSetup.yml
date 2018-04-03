@@ -1,0 +1,26 @@
+---
+- hosts: "{{ target_host }}"
+  vars:
+    IdM_Something: Infrastructure
+  tasks:
+  - name: Install packages
+    yum:
+      name: {{item}}
+      state: present
+      with_items: 
+        - ipa-server
+  - name:  Configure Firewall Services
+    firewalld:
+      service: {{item}}
+      permanent: true
+      with_items:
+        - http
+        - https
+        - dns
+  - name:  Configure Firewall Ports
+    firewalld:
+      port: {{item.port}}/{{item.protocol}}
+      with_items:
+        - { port: "53", protocol: "tcp" }
+
+
