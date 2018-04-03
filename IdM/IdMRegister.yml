@@ -1,0 +1,29 @@
+---
+- hosts: "{{ target_host }}"
+  vars:
+    satellite: sat6.redhat.infrastructure.net
+    satellite_ak: NewHost
+    satellite_org: Infrastructure
+  tasks:
+  - name: Install Satellite package
+    yum:
+      name: http://{{ satellite }}/pub/katello-ca-consumer-latest.noarch.rpm
+      state: present
+  - name:  Register to Satellite
+    redhat_subscription:
+      state: present
+      activationkey: "{{ satellite_ak }}"
+      org_id: "{{ satellite_org }}"
+  - name:  Updates system
+    yum:
+      name: '*'
+      state: latest
+  - name: Install Katello Agent
+    yum:
+      name: katello-agent
+      state: installed
+  - name: Restart server
+    command: /sbin/shutdown -r +1
+    async: 0
+    poll: 0
+    ignore_errors: true
